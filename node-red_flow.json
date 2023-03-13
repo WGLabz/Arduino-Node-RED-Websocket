@@ -1,0 +1,185 @@
+[
+    {
+        "id": "7d551c48106025c7",
+        "type": "tab",
+        "label": "Websocket",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b13508fa8c3b3ef6",
+        "type": "junction",
+        "z": "7d551c48106025c7",
+        "x": 640,
+        "y": 140,
+        "wires": [
+            [
+                "ddeea2003b70252a"
+            ]
+        ]
+    },
+    {
+        "id": "9a0be707bffc7592",
+        "type": "websocket in",
+        "z": "7d551c48106025c7",
+        "name": "",
+        "server": "f74bed25c3b2c826",
+        "client": "",
+        "x": 180,
+        "y": 60,
+        "wires": [
+            [
+                "974d758c2ee6b53c"
+            ]
+        ]
+    },
+    {
+        "id": "ddeea2003b70252a",
+        "type": "websocket out",
+        "z": "7d551c48106025c7",
+        "name": "",
+        "server": "f74bed25c3b2c826",
+        "client": "",
+        "x": 940,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "8161398f98679057",
+        "type": "debug",
+        "z": "7d551c48106025c7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "cab186c2bb146cbb",
+        "type": "inject",
+        "z": "7d551c48106025c7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 140,
+        "wires": [
+            [
+                "870939f9fc6ee3cd"
+            ]
+        ]
+    },
+    {
+        "id": "870939f9fc6ee3cd",
+        "type": "function",
+        "z": "7d551c48106025c7",
+        "name": "Send 0",
+        "func": "msg.payload = JSON.stringify({\n    status: 0\n})\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 140,
+        "wires": [
+            [
+                "b13508fa8c3b3ef6"
+            ]
+        ]
+    },
+    {
+        "id": "a002f5357ff74490",
+        "type": "function",
+        "z": "7d551c48106025c7",
+        "name": "Send 1",
+        "func": "msg.payload = JSON.stringify({\n    status: 1\n})\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 220,
+        "wires": [
+            [
+                "b13508fa8c3b3ef6"
+            ]
+        ]
+    },
+    {
+        "id": "35d5a71baa3fb66e",
+        "type": "inject",
+        "z": "7d551c48106025c7",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 220,
+        "wires": [
+            [
+                "a002f5357ff74490"
+            ]
+        ]
+    },
+    {
+        "id": "974d758c2ee6b53c",
+        "type": "function",
+        "z": "7d551c48106025c7",
+        "name": "parse",
+        "func": "msg.payload = JSON.parse(msg.payload || '{}')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 60,
+        "wires": [
+            [
+                "8161398f98679057"
+            ]
+        ]
+    },
+    {
+        "id": "f74bed25c3b2c826",
+        "type": "websocket-listener",
+        "path": "/test/esp32",
+        "wholemsg": "false"
+    }
+]
