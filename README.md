@@ -4,4 +4,5 @@ This is an example code for communicating with any Websocket [In this case Node-
 ![](screenshot.png)
 
 🔗 Other links:
-YouTube tutorial video: 
+
+* YouTube tutorial video: 
