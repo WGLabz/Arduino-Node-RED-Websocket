@@ -34,6 +34,7 @@ WebsocketsClient client;
 DynamicJsonDocument doc(1024);
 
 char response[200];
+bool connectionStatus = false;
 void setup() {
   pinMode(ONBOARD_BUTTON, INPUT);
   pinMode(LED_BUILTIN, OUTPUT);
@@ -64,6 +65,7 @@ void setup() {
   bool connected = client.connect(websockets_server_host, websockets_server_port, "/test/esp32");
   if (connected) {
     Serial.println("WS Connected!");
+    connectionStatus = true;
   } else {
     Serial.println("WS Connection failed    !");
   }
@@ -76,23 +78,36 @@ void setup() {
 }
 
 void loop() {
+
   if (client.available()) {
     client.poll();
   }
   if (!digitalRead(ONBOARD_BUTTON)) {
     delay(300);
 #ifdef DEBUG
-    Serial.print("Pressed Button");
+    Serial.println("Pressed Button");
 #endif
-    sprintf(response, "{\"temperature\": %f, \"Humidity\": %f}", 2.3, 2.9);
+    sprintf(response, "{\"temperature\": %f, \"Humidity\": %f}", 0.5, 0.6);
     client.send(response);
+  }
+
+  if (!connectionStatus) {
+    Serial.println("No Connection");
+    bool reconnectStatus = client.connect(websockets_server_host, websockets_server_port, "/test/esp32");
+    if (reconnectStatus) {
+      Serial.println("WS Reconnected!");
+      connectionStatus = true;
+    } else {
+      // 1 Min Wait
+      delay(60000);
+    }
   }
 }
 
 void messageCallback(WebsocketsMessage message) {
 #ifdef DEBUG
   Serial.print("Message Received: ");
-    Serial.println(message.data());
+  Serial.println(message.data());
 #endif
   deserializeJson(doc, message.data());
   if (doc["status"] == 1) {
@@ -107,6 +122,7 @@ void eventCallback(WebsocketsEvent event, String data) {
     Serial.println("Connnection Opened");
   } else if (event == WebsocketsEvent::ConnectionClosed) {
     Serial.println("Connnection Closed");
+    connectionStatus = false;
   } else if (event == WebsocketsEvent::GotPing) {
     Serial.println("Pinged👋, responding with PONG!");
     client.pong();
